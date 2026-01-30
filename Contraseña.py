@@ -5,15 +5,10 @@ import random
 #El siguiente programa tiene como proposito generar claves de forma aleatoria, 
 #en el que el usuario pueda usarlas dependiendo de la longitud que desee, además,
 #se mostrará en pantalla si la contraseña generada es debil, media o fuerte.
-#Se utiliza la tecnologia customtkinter para el apartado grafico de la app
+#Se utiliza la tecnologia customtkinter para el apartado grafico de la app.
 
-ctk.set_appearance_mode("Oscuro")
-ctk.set_appearance_mode("Claro")
-
-#Ventana principal
-app = ctk.CTK()
-# Este apartado es para el historial de contraseñas generadas
-historial = []
+ctk.set_appearance_mode("Dark")
+ctk.set_appearance_mode("Blue")
 
 
 def evaluar_seguridad(contraseña):
@@ -28,11 +23,11 @@ def evaluar_seguridad(contraseña):
 #Condicional para saber si la contraseña generada en base a los digitos 
 #escogidos por el usuario son debiles, medios o fuertes.
     if longitud < 8 or tipos < 2:
-        return "Débil"
+        return "Débil", "red"
     elif longitud < 12 or tipos < 3:
-        return "Media"
+        return "Media", "orange"
     else:
-        return "Fuerte"
+        return "Fuerte", "green"
     
 #Creacion de la funcion generar_contraseña, aquí se va a generar de forma
 #aleatoria la contraseña, para hacer posible esto utilizamos la función 
@@ -42,43 +37,74 @@ def generar_contraseña(longitud):
     contraseña = "".join(random.choice(caracteres) for _ in range(longitud))
     return contraseña
 
-#Creamos la funcion mostrar_historial para ver el historial de contraseñas
-def mostrar_historial():
-    if historial:
-        print("\n Historial de contraseñas generadas:")
-        for i, (pwd, nivel) in enumerate(historial, start=1):
-            print(f"{i}. {pwd} ({nivel})")
-    else:
-        print("\n No se han generado contraseñas aún.")
+#Ventana principal
+app = ctk.CTk()
+app.title("Generador de Contraseñas")
+app.geometry("420x450")
+app.resizable(False, False)
 
-# Menú principal del programa
-while True:
-    print("\n--- Generador de Contraseñas ---")
-    print("1. Generar nueva contraseña")
-    print("2. Ver historial")
-    print("3. Salir")
 
-    opcion = input("Seleccione una opción (1-3): ")
+#Interfaz
+titulo = ctk.CTkLabel(
+    app,
+    text="Generador de Contraseñas",
+    font=("Arial", 20, "bold")
+)
+titulo.pack(pady=20)
 
-    if opcion == "1":
-        try:
-            longitud = int(input("Ingrese el tamaño de la contraseña: "))
-            if longitud < 1:
-                print(" La longitud debe ser mayor que 0.")
-                continue
-            contraseña = generar_contraseña(longitud)
-            seguridad = evaluar_seguridad(contraseña)
 
-            print(" Contraseña generada:", contraseña)
-            print(" Nivel de seguridad:", seguridad)
+longitud_label = ctk.CTkLabel(app, text="Longitud de la contraseña: 12")
+longitud_label.pack()
 
-            historial.append((contraseña, seguridad))
-        except ValueError:
-            print(" Ingrese un número válido.")
-    elif opcion == "2":
-        mostrar_historial()
-    elif opcion == "3":
-        print(" Saliendo del programa.")
-        break
-    else:
-        print(" Opción inválida. Intente nuevamente.")
+def actualizar_longitud(valor):
+    longitud_label.configure(
+        text=f"Longitud de la contraseña: {int(valor)}"
+    )
+
+slider = ctk.CTkSlider(
+    app,
+    from_=4,
+    to=32,
+    number_of_steps=28,
+    command=actualizar_longitud
+)
+slider.set(12)
+slider.pack(pady=10)
+
+
+entrada_contraseña = ctk.CTkEntry(
+    app,
+    width=300,
+    justify="center",
+    font=("Arial", 14)
+)
+entrada_contraseña.pack(pady=15)
+
+
+seguridad_label = ctk.CTkLabel(app, text="")
+seguridad_label.pack(pady=5)
+
+
+#Funcion para generar y evaluar la contraseña
+def generar():
+    longitud = int(slider.get())
+    contraseña = generar_contraseña(longitud)
+    nivel, color = evaluar_contraseña(contraseña)
+
+    entrada_contraseña.delete(0, "end")
+    entrada_contraseña.insert(0, contraseña)
+
+    seguridad_label.configure(
+        text=f"Nivel de seguridad: {nivel}",
+        text_color=color
+    )
+
+
+boton_generar = ctk.CTkButton(
+    app,
+    text="Generar contraseña",
+    command=generar
+)
+boton_generar.pack(pady=15)
+
+app.mainloop()

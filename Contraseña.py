@@ -1,11 +1,17 @@
+import customtkinter as ctk
 import string
 import random
 
 #El siguiente programa tiene como proposito generar claves de forma aleatoria, 
 #en el que el usuario pueda usarlas dependiendo de la longitud que desee, además,
 #se mostrará en pantalla si la contraseña generada es debil, media o fuerte.
+#Se utiliza la tecnologia customtkinter para el apartado grafico de la app
 
+ctk.set_appearance_mode("Oscuro")
+ctk.set_appearance_mode("Claro")
 
+#Ventana principal
+app = ctk.CTK()
 # Este apartado es para el historial de contraseñas generadas
 historial = []
 

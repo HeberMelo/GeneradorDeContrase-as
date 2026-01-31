@@ -37,5 +37,5 @@ cd generador-contraseñas
 pip install customtkinter
 #
 # Ejecuta la aplicación
-python generador_contraseñas.py
+python Contraseña.py
 

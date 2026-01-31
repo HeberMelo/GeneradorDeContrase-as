@@ -25,4 +25,17 @@ La fortaleza de la contraseña se evalúa según:
 •Customtkinter
 
 > [!IMPORTANT]
->Proceso de instalación: 
+>A continuación se muestra el proceso de instalación.
+
+# clona el repositorio
+git clone https://github.com/tu-usuario/generador-contraseñas.git
+#
+# Entra al proyecto
+cd generador-contraseñas
+#
+# Instala las dependencias 
+pip install customtkinter
+#
+# Ejecuta la aplicación
+python generador_contraseñas.py
+
